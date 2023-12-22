@@ -92,8 +92,8 @@ plot_gender_participation <- plot_ly(data = combined_data, x = ~Year,
                                      hovertext = ~paste("Year: ", Year,
                                                         "<br>Female: ", FemaleCount,
                                                         "<br>Male: ", -MaleCount)) %>%
-  add_bars(y = ~FemaleCount, name = "Female", marker = list(color = '#f60000')) %>%
-  add_bars(y = ~MaleCount, name = "Male", marker = list(color = '#0000FF')) %>%
+  add_bars(y = ~FemaleCount, name = "Female", marker = list(color = '#BB29BB')) %>%
+  add_bars(y = ~MaleCount, name = "Male", marker = list(color = '#0A2472')) %>%
   layout(xaxis = list(title = "Year"),
          yaxis = list(title = "Number of Participants", 
                       range = c(-8000, 8000)),  # Set explicit y-axis limits
@@ -164,7 +164,7 @@ merged_data_tokyo <- world_map %>%
 merged_data_tokyo.df <- as.data.frame(merged_data_tokyo)
 
 
-fill_color <- "firebrick2"  # You can choose any color you prefer
+fill_color <- "#BB29BB"  # You can choose any color you prefer
   
 
 # Create the ggplot plot
@@ -184,7 +184,7 @@ base_plot <- ggplot(merged_data_tokyo) +
                                                "<br>Total Men:", Total_Men,
                                                "<br>GII-Index:", GII)),
           color = NA) +
-  scale_fill_gradient(low = "white", high = fill_color, na.value = "grey50") +
+  scale_fill_gradient(low = "pink", high = fill_color, na.value = "grey50") +
   labs(fill = "Total Women") +
   theme_minimal()
 
@@ -207,14 +207,14 @@ merged_data_tokyo_ratio <- world_map %>%
   left_join(map_tokyo_GII.r, by = c("region" = "Country"))
 merged_data_tokyo_ratio.df <- as.data.frame(merged_data_tokyo_ratio)
 
-fill_color <- "firebrick2"  # You can choose any color you prefer
+fill_color <- "#BB29BB"  # You can choose any color you prefer
   
 
 # Create the ggplot plot
 ggplot(merged_data_tokyo_ratio) +
   geom_polygon(aes(x = long, y = lat, 
                    group = group, fill = ratio_women), color = NA) +
-  scale_fill_gradient(low = "white", high = fill_color, na.value = "grey50") +
+  scale_fill_gradient(low = "pink", high = fill_color, na.value = "grey50") +
   labs(
     fill = "Woman") +
   theme_minimal()
@@ -227,7 +227,7 @@ base_plot_ratio <- ggplot(merged_data_tokyo_ratio) +
                                                "<br>Women Ratio:", 
                                                sprintf("%.2f", ratio_women))),
           color = NA) +
-  scale_fill_gradient(low = "white", high = fill_color, na.value = "grey50") +
+  scale_fill_gradient(low = "pink", high = fill_color, na.value = "grey50") +
   labs(fill = "ratio_women") +
   theme_minimal()
 
@@ -236,6 +236,15 @@ interactive_map_equality_ratio <- ggplotly(base_plot_ratio, tooltip = "text")
 
 # Show the interactive map
 # interactive_map_equality_ratio
+
+
+#### > is there any connection ####
+
+# Calculate the correlation
+correlation_test <- cor.test(merged_data_tokyo_ratio$ratio_women, merged_data_tokyo_ratio$GII, method = "pearson")
+
+# Print the results
+print(correlation_test)
 
 #### Pie Chart Gender ####
 # Calculate the sum of female and male athletes
@@ -268,9 +277,10 @@ pie_gender <- plot_ly(gender_totals, labels = ~Gender, values = ~Count,
                       type = 'pie', 
                       hoverinfo = 'label+percent', 
                       textinfo = 'none',  # No text inside the slices
-                      marker = list(colors = c('#f60000', '#0000FF')),
+                      marker = list(colors = c('#BB29BB', '#0A2472')),
                       insidetextorientation = 'radial') %>%
   layout(
+    title = "Tokyo 2020",
     showlegend = FALSE,
     legend = list(orientation = 'v', x = 1, y = -0.1, xanchor = 'right', yanchor = 'bottom')
   )
@@ -309,7 +319,7 @@ gender_tokyo_long <- gender_tokyo %>%
 discipline_gender <- ggplot(gender_tokyo_long, aes(x = reorder(Discipline, Ratio), y = Count, fill = Gender)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   coord_flip() +  # Flip coordinates for horizontal bars
-  scale_fill_manual(values = c("Female" = "firebrick2", "Male" = "blue2")) +
+  scale_fill_manual(values = c("Female" = "#BB29BB", "Male" = "#0A2472")) +
   labs(x = "Discipline", y = "Count", fill = "Gender") +
   theme_minimal() +
   theme(legend.position = "bottom")
@@ -344,7 +354,7 @@ discipline_event <- ggplot(gender_tokyo_events_long, aes(x = reorder(Discipline,
                                                                       "<br>Events:", Events_Text))) +
   geom_bar(stat = "identity", position = position_dodge()) +
   coord_flip() +
-  scale_fill_manual(values = c("Female" = "firebrick2", "Male" = "blue2")) +
+  scale_fill_manual(values = c("Female" = "#BB29BB", "Male" = "#0A2472")) +
   labs(x = "Discipline", y = "Count", fill = "Gender") +
   theme_minimal() +
   theme(legend.position = "bottom")
@@ -397,7 +407,7 @@ discipline_event <- ggplot(gender_tokyo_events_long, aes(x = reorder(Discipline,
                                                          text = Tooltip_Text)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   coord_flip() +
-  scale_fill_manual(values = c("Female" = "firebrick2", "Male" = "blue2")) +
+  scale_fill_manual(values = c("Female" = "#BB29BB", "Male" = "#0A2472")) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   labs(x = "Discipline", y = "Count", fill = "Gender") +
   theme_minimal() +
@@ -417,7 +427,7 @@ discipline_event_women <- gender_tokyo_events_long %>%
              text = Tooltip_Text)) + # 'aes()' is for mappings, data is specified before 'ggplot()'
   geom_bar(stat = "identity", position = position_dodge()) +
   coord_flip() +
-  scale_fill_manual(values = c("Female" = "firebrick2", "Male" = "blue2")) +
+  scale_fill_manual(values = c("Female" = "#BB29BB", "Male" = "#0A2472")) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   labs(x = "Discipline", y = "Count", fill = "Gender") +
   theme_minimal() +
@@ -438,7 +448,7 @@ discipline_event_men <- gender_tokyo_events_long %>%
              text = Tooltip_Text)) + # 'aes()' is for mappings, data is specified before 'ggplot()'
   geom_bar(stat = "identity", position = position_dodge()) +
   coord_flip() +
-  scale_fill_manual(values = c("Female" = "firebrick2", "Male" = "blue2")) +
+  scale_fill_manual(values = c("Female" = "#BB29BB", "Male" = "#0A2472")) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   labs(x = "Discipline", y = "Count", fill = "Gender") +
   theme_minimal() +
@@ -463,7 +473,7 @@ merged_data <- merge(world_map, map_tokyo_GII, by.x = "region", by.y = "Country"
 # Create the plot
 ggplot(merged_data) +
   geom_polygon(aes(x = long, y = lat, group = group, fill = Total_Women)) +
-  scale_fill_gradient(low = "white", high = "firebrick2", na.value = "grey50") +
+  scale_fill_gradient(low = "white", high = "#BB29BB", na.value = "grey50") +
   labs(fill = "Total Women") +
   theme_minimal()
 
